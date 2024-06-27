@@ -1,4 +1,4 @@
-package com.example.daycare_pbm
+package com.example.daycare_app
 
 import io.flutter.embedding.android.FlutterActivity
 
