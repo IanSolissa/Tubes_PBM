@@ -1,3 +1,4 @@
+import 'package:daycare_app/data_anak.dart';
 import 'package:daycare_app/input_data_anak.dart';
 import 'package:daycare_app/testing.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'login_pengasuh.dart'; // Import halaman LaporanActivityAnakScreen
 
 void main() {
   runApp(MaterialApp(
-    home: InputDataAnakScreen(),
+    home: DataAnakScreen(),
   ));
 }
     
