@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 class ToiletEntry {
   TextEditingController timeController = TextEditingController();
@@ -31,12 +29,12 @@ class VitaminEntry {
 
 class ActivityInputScreen extends StatefulWidget {
   final String childName="ian";
-   String id_anak;
-   String id_orangtua;
+  final List anak;
+  
    bool StatusPut=false;
-   String id_pengasuh;
+  final String id_pengasuh;
 
-  ActivityInputScreen({required this.id_anak,required this.id_orangtua,required this.id_pengasuh});
+  ActivityInputScreen({required this.anak,required this.id_pengasuh});
 
   @override
   _ActivityInputScreenState createState() => _ActivityInputScreenState();
@@ -77,6 +75,7 @@ String quantityFinal="1";
   final TextEditingController _otherItemController = TextEditingController();
 List<dynamic> anak=[];
 
+late String id_laporan="";
 late List<Map<String,dynamic>> itemneed=[];
 late List<Map<String,dynamic>> meals=[];
 late List<Map<String,dynamic>> toilet=[];
@@ -85,32 +84,33 @@ late List<Map<String,dynamic>> vitamin=[];
 late List<Map<String,dynamic>>bottle=[];
   
 int indexItemneed=0;
-Future<void>PutDataAnak(String id_anak)async{
-  try {
-    print("MASUKK");
-    final response = await http.post(Uri.parse('http://10.0.2.2/daycare_api/put_Data_anak.php'),body: {'id_anak':id_anak});
-  if (response.statusCode==200) {
-  setState(() {
+// Future<void>PutDataAnak(String id_anak)async{
+//   try {
     
-   anak=jsonDecode(response.body);
-   widget.StatusPut=true;
-  });
+//     final response = await http.post(Uri.parse('http://10.0.2.2/daycare_api/put_Data_anak.php'),body: {'id_anak':id_anak});
+//   if (response.statusCode==200) {
+//   setState(() {
+//     print("Put ID Anak Berhasil...");
+//    anak=jsonDecode(response.body);
+//    widget.StatusPut=true;
+//   });
    
-  } else {
-    setState(() {
+//   } else {
+//     setState(() {
       
-   widget.StatusPut=false;
-    });
-    print("Ga Masuk");
+//    widget.StatusPut=false;
+//     });
+//     print("Put Id Anak Gagal");
     
-  }
-  }
-  catch(e){
-      print("GA MASUKK");
-    print(e);
+//   }
+//   }
+//   catch(e){
+//     print("Put Id Anak Gagal");
+
+//     print(e);
   
-  }
-}
+//   }
+// }
 
 
 // TOILET
@@ -118,16 +118,16 @@ bool statusPostToilet=false;
 Future<void>postToilet(String value,String value2,String value3,String value4)async{
   try{
     
-      final response = await http.post(Uri.parse('http://10.0.2.2/daycare_api/post_Data_Toilets.php'),body: {
+      final response = await http.post(Uri.parse('http://10.0.2.2/daycare_api/post_Data_toilet.php'),body: {
 "waktu":value,
 "type":value2,
 "kondisi":value3,
 "catatan":value4,
+'id_laporan':id_laporan,
     });
-    
    var $result=jsonDecode(response.body);
   if($result["status"]=="Berhasil"){
-    print("BERHASIL");
+    print("Api Toilet Berhasil di gunakan...");
     setState(() {
       statusPostToilet=true;
     });
@@ -136,12 +136,13 @@ Future<void>postToilet(String value,String value2,String value3,String value4)as
   }
   catch(e){
     setState(() {
+    print("Api Toilet Gagal di gunakan...");
       statusPostToilet=false;
     });
     print(e);
   }
 }
-
+    
 // MEALLL
 bool statusPostMeal=false;
 Future<void>postMeal(String value,String value2,String value3)async{
@@ -151,11 +152,13 @@ Future<void>postMeal(String value,String value2,String value3)async{
 "food":value,
 "quantity":value2,
 "comment":value3,
+'id_laporan':id_laporan,
     });
     
    var $result=jsonDecode(response.body);
   if($result["status"]=="Berhasil"){
-    print("BERHASIL");
+
+print("Api Meal Berhasil di gunakan...");
     setState(() {
       statusPostMeal=true;
     });
@@ -164,6 +167,7 @@ Future<void>postMeal(String value,String value2,String value3)async{
   }
   catch(e){
     setState(() {
+print("Api Meal Gagal di gunakan...");
       statusPostMeal=false;
     });
     print(e);
@@ -178,12 +182,13 @@ Future<void>postReast(String value,String value2)async{
       final response = await http.post(Uri.parse('http://10.0.2.2/daycare_api/post_Data_rest.php'),body: {
 "start_time":value,
 "end_time":value2,
-
+'id_laporan':id_laporan,
     });
     
    var $result=jsonDecode(response.body);
   if($result["status"]=="Berhasil"){
-    print("BERHASIL");
+    
+print("Api Rest Berhasil di gunakan...");
     setState(() {
       statusPostReast=true;
     });
@@ -193,6 +198,7 @@ Future<void>postReast(String value,String value2)async{
   catch(e){
     setState(() {
       statusPostReast=false;
+print("Api Rest Gagal di gunakan...");
     });
     print(e);
   }
@@ -209,12 +215,14 @@ Future<void> postBottle(String time, String ML, String type) async {
         "time": time,
         "ML": ML,
         "type": type,
+        'id_laporan':id_laporan,
       },
     );
 
     var result = jsonDecode(response.body);
     if (result["status"] == "Berhasil") {
-      print("POST bottle SUKSES");
+      
+print("Api Bottle Berhasil di gunakan...");
       setState(() {
         statusPostBottle = true;
       });
@@ -241,19 +249,21 @@ Future<void> postShower(String morningShower, String eveningShower) async {
       body: {
         "morning_shower": morningShower,
         "evening_shower": eveningShower,
+        'id_laporan':id_laporan,
       },
     );
 
     var result = jsonDecode(response.body);
     if (result["status"] == "Berhasil") {
-      print("POST shower SUKSES");
+      
+print("Api Shower Berhasil di gunakan...");
       statusPostShower = true;
     } else {
-      print("POST shower GAGAL: ${result['message']}");
+      print("Api shower GAGAL: ${result['message']}");
       statusPostShower = false;
     }
   } catch (e) {
-    print("Error pada saat POST shower: $e");
+    print("Error pada saat API POST shower: $e");
     statusPostShower = false;
   }
 }
@@ -270,12 +280,13 @@ Future<void> postVitamin(String vitaminName, String amount, String time) async {
         "vitamin_name": vitaminName,
         "amount": amount,
         "time": time,
+        'id_laporan':id_laporan,
       },
     );
 
     var result = jsonDecode(response.body);
     if (result["status"] == "Berhasil") {
-      print("POST vitamin SUKSES");
+print("Api Vitamin Berhasil di gunakan...");
       statusPostVitamin = true;
     } else {
       print("POST vitamin GAGAL: ${result['message']}");
@@ -292,18 +303,22 @@ Future<void> postVitamin(String vitaminName, String amount, String time) async {
 bool statusPostItem = false;
 
 Future<void> postItem(String key, String quantity) async {
+  if (quantity=='none'||quantity=='None') {
+    quantity='1';
+  }
   try {
     final response = await http.post(
       Uri.parse('http://10.0.2.2/daycare_api/post_Data_item.php'),
       body: {
         "key": key,
         "quantity": quantity,
+        'id_laporan':id_laporan,
       },
     );
-
+    
     var result = jsonDecode(response.body);
     if (result["status"] == "Berhasil") {
-      print("POST item SUKSES");
+print("Api Item Berhasil di gunakan...");
       statusPostItem = true;
     } else {
       print("POST item GAGAL: ${result['message']}");
@@ -315,35 +330,107 @@ Future<void> postItem(String key, String quantity) async {
   }
 }
 
+Future<bool> laporanAnak(String $id_anak)async {
+  if ($id_anak!='') {
+    if (widget.anak[0]['id']!=" ") {
+try {
+if (_arrivalController.text==''||_bodyTemperatureController.text==''||_conditionsController.text=='') {
+ 
+  return false;
+}
+else{
+   print(_bodyTemperatureController.text);
+  print(_conditionsController.text);
+  print(_arrivalController.text);
+  var response= await http.post(Uri.parse('http://10.0.2.2/daycare_api/post_Data_laporananak.php'),body: {
+    'id_anak':widget.anak[0]['id'],
+    'arrival_time':_arrivalController.text,
+    'temperature':_bodyTemperatureController.text,
+    'kondisi':_conditionsController.text,
+    
+  });
+    if (response.statusCode==200 || response.statusCode==201 ) {
 
-
-void updateDataAnak(){
+    
+    var result=jsonDecode(response.body);
+    if (result['status']!="Gagal") {
+      if (result['new_id']!=" ") {
+print("Api Laporan Anak Berhasil di gunakan...");
+        setState(() {
+          
+        id_laporan=result['new_id'].toString();
+        });
+        return true;
+      }else{
+setState(() {
   
+print("Api Laporan Anak Gagal di gunakan...");
+        id_laporan="reset";
+});
+        
+        return false;
+      }
+    }else{
+      // print(result);
+      return false;
+    }
+    print("AMBIL ID NYA LALU TARO DI TABEL LAIN");
+    
+  }
+  else{
+    return false;
+  }
+}
 
-  print('masuk');
+
+} catch (e) {
+  print(e);
+}
+    return true;
+    }else{
+      return false;
+    }
+
+  }else{return false;}
+}
+
+
+Future<void> updateDataAnak() async{
+ bool initialpost= await laporanAnak(widget.anak[0]['id']); 
+
+if (initialpost==true && id_laporan!="reset") {
+  print("ID LAPORAN : ${id_laporan}");
+  bool initialpost2=false;
+  try {
+
+    print("---------------------------------------INFO STATUS----------------------------------------------");
+    print("laporan anak selesai, dan selanjutnya post tabel lainnya dengan laporan anak menjadi foreign key");
+    print("------------------------------------------------------------------------------------------------");
+if (initialpost2==false && widget.anak.length>0) {
+
+  
   //------------------------------ POST TO MEALS------------------------------
   if (meals.length>0) {
    for (var i = 0; i < meals.length; i++) {
-    print(meals[i]['Food']);
      postMeal(meals[i]['Food'], meals[i]['Quantity'], meals[i]['Comment']);
    if (statusPostMeal) {
     print('POST MEAL SUCCES....'); 
    }
    else{
-    print("GAGAL");
+    print("POST MEAL GAGAL");
    }
    }
   }
   //------------------------------ POST TO TOILET------------------------------
    if (toilet.length>0) {
+
    for (var i = 0; i < toilet.length; i++) {
-    print(toilet[i]['catatan']);
-  postToilet(toilet[i]['waktu'], toilet[i]['type'], toilet[i]['kondisi'], toilet[i]['catatan']);
+    postToilet(toilet[i]['waktu'], toilet[i]['type'], toilet[i]['kondisi'], toilet[i]['notes']);
    if (statusPostToilet) {
     print('POST Toilet SUCCES....'); 
    }
    else{
-    print("GAGAL");
+    print("Post TOILET GAGAL");
    }
    }
   }
@@ -351,11 +438,10 @@ void updateDataAnak(){
   //------------------------------ POST TO Rest------------------------------
    if (rest.length>0) {
    for (var i = 0; i < rest.length; i++) {
-    print(rest[i]);
-
+    
   postReast(rest[i]['start_time'], rest[i]['end_time']);
    if (statusPostReast) {
-    print('POST rest SUCCES....'); 
+    print('POST Rest SUCCES....'); 
    }
    else{
     print("POST REST GAGAL");
@@ -366,11 +452,7 @@ void updateDataAnak(){
    //------------------------------ POST TO Bottle------------------------------
    if (bottle.length>0) {
    for (var i = 0; i < bottle.length; i++) {
-    print(bottle[i]);
-    print(bottle[i]['time']);
-    print(bottle[i]['ML']);
-    print(bottle[i]['type']);
-
+    
   postBottle(bottle[i]['time'], bottle[i]['ML'],bottle[i]['type']);
    if (statusPostBottle) {
     print('POST bottle SUCCES....'); 
@@ -382,9 +464,9 @@ void updateDataAnak(){
   }
 
   //------------------------------ POST TO Showeer------------------------------
-  print(_showerEveningController.text);
-   if (_showerMorningController.text!='  '&& _showerEveningController.text!=' ') {
-    print("MASUK POST SHOWwe");
+  
+   if (_showerMorningController.text!="" && _showerEveningController.text!="") {
+    
     postShower(_showerEveningController.text, _showerEveningController.text);
    if (statusPostShower) {
     print('POST shower SUCCES....'); 
@@ -398,20 +480,19 @@ void updateDataAnak(){
   //------------------------------ POST TO vitamin------------------------------
  if (vitamin.length>0) {
    for (var i = 0; i < vitamin.length; i++) {
-    print(vitamin[i]['Food']);
+    
      postVitamin(vitamin[i]['vitamin_name'], vitamin[i]['amount'], vitamin[i]['time']);
    if (statusPostVitamin) {
-    print('POST MEAL SUCCES....'); 
+    print('POST Vitamin SUCCES....'); 
    }
    else{
-    print("GAGAL");
+    print("POST Vitamin GAGAL");
    }
    }
   }
   //------------------------------ POST TO Item------------------------------
  if (itemneed.length>0) {
    for (var i = 0; i < itemneed.length; i++) {
-    print(itemneed[i]['key']);
      postItem(itemneed[i]['key'], itemneed[i]['quantity']);
    if (statusPostItem) {
     print('POST Item SUCCES....'); 
@@ -425,34 +506,49 @@ void updateDataAnak(){
 
 
 
-
-  // print(_toiletEntries[0].toString());
-  // print(_restEntries[0].toString());
-  // print(_bottleEntries[0].toString());
-// ___________________________________________
-  print(_showerMorningController.text);
-  print(_showerEveningController.text);
-  // _________________________________________
-
-  // print(_itemneedEntries[0]);
+initialpost2=true;
   
-  print("--------------------");
-  for (var element in itemneed) {
-    print(element);
-  }
-  // print(_itemNeeds['checked']);
-  // print(_itemNeeds.toString());
-  // print(_otherItemController)
+} 
 }
+catch (e) {
+  print(e);
+  print("UPDATE INITIAL POST BERMASALAH...");
+  initialpost2=false;
+}
+ 
+ if (initialpost2==true) {
+    print("---------------------------------------INFO STATUS----------------------------------------------");
+    print("-------------------UPDATE POST BERHASIL TANPA KENDALA, TERIMA KASIH----------------------------- ");
+    print("------------------------------------------------------------------------------------------------");
+
+  
+  }
+ else{
+    print("---------------------------------------WARNING INFO----------------------------------------------");
+    print("-------------------UPATE POST MENGALMI KENDALA,DAN GAGAL DI EKSEKUSI-----------------------------");
+    print("-------------------------------------------------------------------------------------------------");
+
+ }
+  
+}
+else{
+    print("---------------------------------------INFO STATUS----------------------------------------------");
+    print("-------------------UPATE POST MEMBUTUHKAN BEBERAPA ATTRIBUT, ULANGI----------------------------- ");
+    print("------------------------------------------------------------------------------------------------");
+
+
+}
+
+ }
 
 
   @override
   void initState() {
     super.initState();
-     PutDataAnak(widget.id_anak);
+    //  PutDataAnak(widget.anak[0]['id']);
     // print(widget.result)
-    
-    _namaAnakController.text = widget.childName; // Mengisi nama anak dari parameter
+    // print(anak[0]['nama_lengkap']);
+    _namaAnakController.text =widget.anak[0]['nama_lengkap']; // Mengisi nama anak dari parameter
   }
 
   void _submitActivity(BuildContext context) {
@@ -554,12 +650,9 @@ for (var i = 0; i < toilet.length; i++) {
   } 
 }
 if (isFind) {
- print("KEY DITEUMAKN");
 }else{
   toilet.add(toiletNew);
 }
-print(toilet);
-
        }
        
       //  ------------------------------REST OBJECT----------------------
@@ -589,25 +682,20 @@ for (var i = 0; i < rest.length; i++) {
 
     rest[i]['end_time']=controller.text;
     }
-    print(rest);
     break;
     
   } 
 }
 if (isFind) {
- print("KEY DITEUMAKN");
-}else{
+ }else{
   rest.add(restNew);
 }
-print(rest);
 
 
        }
       //  ------------------------------BOTTLE OBJECT----------------------
        else if(Object=='Bottle'){
 
-
-print(controller.text);
 Map<String,dynamic> bottleNew={
 'key':index,
 'time':"none",
@@ -629,11 +717,40 @@ for (var i = 0; i < bottle.length; i++) {
   } 
 }
 if (isFind) {
- print("KEY DITEUMAKN");
-}else{
+ }else{
   bottle.add(bottleNew);
 }
-print(bottle);
+
+
+
+// VITAMIN
+       }
+       else if(Object=='Vitamin'){
+
+Map<String,dynamic> vitaminNew={
+'key':index,
+'vitamin_name':"none",
+'amount':"none",
+'time':"none",
+};
+if (vitamin.length<=0) {
+  vitamin.add(vitaminNew);
+}
+bool isFind=false;
+for (var i = 0; i < vitamin.length; i++) {
+  if (vitamin[i]['key']==index) {
+    setState(() {
+      vitamin[i]['time']=controller.text;
+    isFind=true;
+    });
+    break;
+    
+  } 
+}
+if (isFind) {
+}else{
+  vitamin.add(vitaminNew);
+}
 
 
        }
@@ -667,11 +784,11 @@ print(bottle);
   @override
   Widget build(BuildContext context) {
     
-
+print(widget.anak);
       return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Input Child Activity for ${anak[0]['nama_lengkap']}',
+          'Input Child Activity for ${ widget.anak[0]['nama_lengkap']}',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -773,7 +890,7 @@ print(bottle);
   
 Map<String,dynamic> itemneedNew={
 'key':key,
-'name':"none",
+
 'quantity':"none",
 };
 if (itemneed.length>0) {
@@ -792,7 +909,6 @@ for (var i = 0; i < itemneed.length; i++) {
   } 
 }
 if (isFind) {
- print("KEY DITEUMAKN");
 }else{
     itemneed.add(itemneedNew);
 }
@@ -800,7 +916,6 @@ if (isFind) {
 
   itemneed.add(itemneedNew);
 }
-print(itemneed);
 
               
                        indexItemneed+=1;  
@@ -847,27 +962,9 @@ print(itemneed);
                               _itemNeeds[key]['quantity'],
                                   (newValue) {
                                 setState(() {
-//        bool isFind=false;
-// for (var i = 0; i < itemneed.length; i++) {
-//   if (itemneed[i]['name']==key) {
-//     setState(() {
-//       print(newValue);
-//       isFind==true;
-// itemneed[i]['quantity']==newValue;
-//     });
-//     break;
-//   }
-// }
-// if (isFind) {
-//   print('key ditemukan');
-// } else {
-  
-// }
-// print(itemneed);
 
 
                                   _itemNeeds[key]['quantity'] = newValue!;
-print(_itemNeeds);
                                 });
                               },
                               "ItemNeed"
@@ -955,11 +1052,9 @@ for (var i = 0; i < meals.length; i++) {
   } 
 }
 if (isFind) {
- print("KEY DITEUMAKN");
 }else{
   meals.add(Item);
 }
-print(meals);
 }
 // TOILET
 else if(Object=='Toilet'){
@@ -989,11 +1084,9 @@ for (var i = 0; i < toilet.length; i++) {
   } 
 }
 if (isFind) {
- print("KEY DITEUMAKN");
 }else{
   toilet.add(toiletNew);
 }
-print(toilet);
 }
 
 
@@ -1006,7 +1099,6 @@ Map<String,dynamic> vitaminNew={
 'vitamin_name':"none",
 'amount':"none",
 'time':'none',
-'notes':'none',
 };
 if (vitamin.length<=0) {
   vitamin.add(vitaminNew);
@@ -1031,11 +1123,9 @@ for (var i = 0; i < vitamin.length; i++) {
   } 
 }
 if (isFind) {
- print("KEY DITEUMAKN");
 }else{
   vitamin.add(vitaminNew);
 }
-print(vitamin);
 }
 
 
@@ -1060,7 +1150,6 @@ for (var i = 0; i < bottle.length; i++) {
     setState(() {
       
     isFind=true;
-    print(controller.text);
     bottle[i]['ML']=controller.text;
     });
     break;
@@ -1068,11 +1157,9 @@ for (var i = 0; i < bottle.length; i++) {
   } 
 }
 if (isFind) {
- print("KEY DITEUMAKN");
 }else{
   bottle.add(bottleNew);
 }
-print(bottle);
 }
 }
         } ,
@@ -1097,7 +1184,7 @@ print(bottle);
         readOnly: true,
         onTap: onTap,
         decoration: InputDecoration(
-          labelText: anak[0]['tanggal_lahir'],
+          labelText: widget.anak[0]['tanggal_lahir'],
           prefixIcon: Icon(icon),
           filled: true,
           fillColor: Colors.white,
@@ -1153,6 +1240,44 @@ print(bottle);
             isDense: true,
             
             onChanged: (value){
+if (Object=='Meals') {
+
+
+Map<String,dynamic> mealsNew={
+'key':index,
+'Food':"None",
+'Comment':"None",
+'Quantity':'None',
+
+};
+if (meals.length<=0) {
+
+  meals.add(mealsNew);
+}else{
+}
+bool isFind=false;
+for (var i = 0; i < meals.length; i++) {
+  if (meals[i]['key']==index) {
+    setState(() {
+      
+    isFind=true;
+    print(value);
+    meals[i]['Quantity']=value;
+    });
+
+    break;
+    
+  } 
+}
+if (isFind) {
+}else{
+  meals.add(mealsNew);
+}
+
+
+
+}
+
 if (Object=="Toilet") {
   
 Map<String,dynamic> toiletNew={
@@ -1173,11 +1298,9 @@ for (var i = 0; i < toilet.length; i++) {
     isFind=true;
     });
     if (label=='Type') {
-      print("MASUK TYPE");
     toilet[i]['type']=value;
     }else
     if (label=='Condition') {
-      print("MASUK Kondisi");
     toilet[i]['kondisi']=value;
     }
     break;
@@ -1185,11 +1308,9 @@ for (var i = 0; i < toilet.length; i++) {
   } 
 }
 if (isFind) {
- print("KEY DITEUMAKN");
 }else{
   toilet.add(toiletNew);
 }
-print(toilet);
 }
 
 
@@ -1220,37 +1341,34 @@ for (var i = 0; i < bottle.length; i++) {
   } 
 }
 if (isFind) {
- print("KEY DITEUMAKN");
 }else{
   bottle.add(bottleNew);
 }
-print(bottle);
 }
 
 // ITEM NEED
 if (Object=="ItemNeed") {
   var quantityFinal="1";
+  
 bool isFind=false;
-for (var i = 0; i < itemneed.length; i++) {
+for (int i = 0; i < itemneed.length; i++) {
   if (itemneed[i]['key']==index) {
+    
     setState(() {
-      
     isFind=true;
-    itemneed[i]['quantity']=value;
+    itemneed[i]['quantity']=value.toString();
     quantityFinal=value.toString();
     });
   
-    }
     break;
+    }
     
   } 
 
 if (isFind) {
- print("KEY DITEUMAKN");
 }else{
   // itemneed.add(itemneedNew);
 }
-print(itemneed);
 }
             },
             items: options.map((String value) {
@@ -1421,3 +1539,4 @@ meals[i]['Quantity']=newValue;
     );
   }
 }
+

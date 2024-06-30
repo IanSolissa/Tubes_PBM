@@ -1,6 +1,50 @@
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
-class LaporanActivityAnakScreen extends StatelessWidget {
+
+class LaporanActivityAnakScreen extends StatefulWidget {
+  final int id_anak;
+
+LaporanActivityAnakScreen({required this.id_anak});
+
+  @override
+  State<LaporanActivityAnakScreen> createState() => _LaporanActivityAnakScreenState();
+}
+
+class _LaporanActivityAnakScreenState extends State<LaporanActivityAnakScreen> {
+  late List laporan;
+
+Future<void>selectDataLaporan()async{
+  var response=await http.post(Uri.parse('http://10.0.2.2/daycare_api/get_Data_laporan_pengasuh.php'),body: {
+    'id_anak':widget.id_anak.toString(),
+  });
+  try {
+    if (response.statusCode==200||response.statusCode==201) {
+     setState(() {
+       
+      laporan=jsonDecode(response.body);
+     });
+      
+      print(laporan);
+    }
+    else{
+      print("gaada");
+      print(jsonDecode(response.body));
+    }
+  } catch (e) {
+   print(e); 
+  }
+}
+
+@override
+void initState() {
+  selectDataLaporan();
+  
+  super.initState();
+  
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(

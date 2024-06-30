@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  auto_spacing:
+    dependency: "direct main"
+    description:
+      name: auto_spacing
+      sha256: "29753adb602b8d76469a2c462d359b8087afe258af366b6bc2a5d526c0468140"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.7"
   boolean_selector:
     dependency: transitive
     description:

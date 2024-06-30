@@ -1,24 +1,33 @@
 import 'dart:convert';
-import 'dart:ffi';
+import 'package:daycare_app/login.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _usernameController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
+
   final TextEditingController _confirmPasswordController = TextEditingController();
+
+   bool isRegister=false; 
 
   void _register(BuildContext context) {
     final username = _usernameController.text;
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
+    
 }
-
 
    Future<void> SubmitRegister()async{
   
 
-if (_usernameController.text=='' || _passwordController.text=='' && _confirmPasswordController.text==_passwordController.text) {
+if (_usernameController.text=="" || _passwordController.text=="" || _confirmPasswordController.text!=_passwordController.text) {
   print("Isi Semua Kolom...");
 } else {
   try {
@@ -29,7 +38,10 @@ if (_usernameController.text=='' || _passwordController.text=='' && _confirmPass
    
    var $result=jsonDecode(response.body);
   if($result["status"]=="Berhasil"){
-    print("BERHASIL");
+setState(() {
+  
+    isRegister=true;
+});
   }
 
 
@@ -86,7 +98,20 @@ if (_usernameController.text=='' || _passwordController.text=='' && _confirmPass
             ),
             SizedBox(height: 30),
             ElevatedButton(
-              onPressed: SubmitRegister,
+              onPressed: ()async{
+
+              await SubmitRegister();
+              if (isRegister==true) {
+                print('behasil regis');
+                setState(() {
+                  
+                isRegister==false;
+                });
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+ 
+              }
+              }
+              ,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,

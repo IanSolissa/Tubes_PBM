@@ -1,10 +1,57 @@
+
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:daycare_app/data_anak.dart';
+import 'package:daycare_app/listanak_orangtua.dart';
 import 'package:flutter/material.dart';
 import 'input_data_anak.dart'; // Import halaman InputDataAnakScreen
-import 'laporan_activity_anak.dart'; // Import halaman LaporanActivityAnakScreen
+import 'package:http/http.dart' as http;
+class MenuScreen extends StatefulWidget {
+  final List<dynamic>user;
 
-class MenuScreen extends StatelessWidget {
+  MenuScreen({required this.user});
+  @override
+  State<MenuScreen> createState() => _MenuScreenState();
+}
+
+class _MenuScreenState extends State<MenuScreen> {
+  
   @override
   Widget build(BuildContext context) {
+  if (widget.user[0]['isAdmin']==0) {
+// ORANG TUA
+    return TampilanOrangTua(widget: widget);
+  } else{
+// ADMIN
+return DataAnakScreen(user: widget.user);
+  }
+  }
+}
+
+class TampilanOrangTua extends StatefulWidget {
+  late List anak;
+   TampilanOrangTua({
+    super.key,
+  
+    required this.widget,
+  });
+
+  final MenuScreen widget;
+
+  @override
+  State<TampilanOrangTua> createState() => _TampilanOrangTuaState();
+}
+
+class _TampilanOrangTuaState extends State<TampilanOrangTua> {
+  bool statusSelect=false;
+late List<dynamic>resultanak;
+  
+
+
+  @override
+  Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -31,6 +78,8 @@ class MenuScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
+              Center(child: Text("Welcome ${widget.widget.user[0]['username']}"),),
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -47,7 +96,7 @@ class MenuScreen extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.8, // Adjust the width
                   padding: EdgeInsets.all(16),
                   child: Text(
-                    'Input Data Anak',
+                    'Daftarkan Anak Anda',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 18,
@@ -60,7 +109,7 @@ class MenuScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LaporanActivityAnakScreen()),
+                    MaterialPageRoute(builder: (context) => ListanakOrangtua(user: widget.widget.user)),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -72,7 +121,7 @@ class MenuScreen extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.8, // Adjust the width
                   padding: EdgeInsets.all(16),
                   child: Text(
-                    'Laporan Aktivitas Anak',
+                    'Lihat Daftar Anak Anda',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 18,
@@ -80,6 +129,7 @@ class MenuScreen extends StatelessWidget {
                   ),
                 ),
               ),
+
             ],
           ),
         ),

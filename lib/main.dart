@@ -1,13 +1,10 @@
-import 'package:daycare_app/data_anak.dart';
-import 'package:daycare_app/input_data_anak.dart';
-import 'package:daycare_app/testing.dart';
+
+import 'package:daycare_app/register.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
-import 'login_pengasuh.dart'; // Import halaman LaporanActivityAnakScreen
-
 void main() {
   runApp(MaterialApp(
-    home: DataAnakScreen(),
+    home: LoginScreen(),
   ));
 }
     
@@ -53,7 +50,7 @@ class HomeScreen extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(16),
                   child: Text(
-                    'Login Sebagai Orang Tua',
+                    'Login',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 18,
@@ -69,7 +66,7 @@ class HomeScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => LoginPengasuhScreen()),
+                        builder: (context) => RegisterScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -80,7 +77,7 @@ class HomeScreen extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(10),
                   child: Text(
-                    'Login Sebagai Pengasuh',
+                    'Register',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 18,

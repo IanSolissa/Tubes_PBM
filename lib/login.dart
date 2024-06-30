@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'input_data_anak.dart'; // Import halaman InputDataAnakScreen
 import 'register.dart';
 import 'package:http/http.dart' as http;
 import 'forgot_password.dart'; // Import halaman ForgotPasswordScreen
 import 'menu.dart'; // Import halaman MenuScreen
 
 class LoginScreen extends StatefulWidget {
+  
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   late bool statusLogin=false;
+  late List<dynamic> user;
 
 Future<void> Login()async{
   
@@ -30,11 +31,13 @@ if (_usernameController.text=='' || _passwordController.text=='' ) {
 "username":_usernameController.text,
 "password":_passwordController.text,
     });
-   
-   var $result=jsonDecode(response.body);
-  if($result["status"]=="Berhasil"){
-setState(() {
+  //  print(response.body);
+   user=jsonDecode(response.body);
   
+  print(user[0]['username']);
+  if(user[0]['username']!=[]){
+setState(() {
+
     statusLogin=true;
 });
   }else{
@@ -133,7 +136,7 @@ setState(() {
                     print("BERHASIL MASUK KE HALAMAN....");
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MenuScreen()),
+                      MaterialPageRoute(builder: (context) => MenuScreen(user:user)),
                     );
                   } else {
                     print("ANDA BELUM LOGIN");
