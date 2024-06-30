@@ -81,6 +81,21 @@ $result+=['laporan'=> $laporan];
     // echo $bottle[0]['id'];
 
 
+    // -------------- shower
+    $queryshower = "SELECT * FROM shower WHERE id_laporan ='$get_id'" ;
+    $exeshower = mysqli_query($con, $queryshower);
+    $shower=[];
+    while ($row = mysqli_fetch_array($exeshower)) {
+        $shower[] = $row;
+        // print $row[];
+    // print("ADA");
+    }
+    $result+=['shower'=> $shower];
+    // echo json_encode($shower);
+    
+    // echo $shower[0]['id'];
+
+
 
     // -------------- vitamin
     $queryvitamin = "SELECT * FROM vitamin WHERE id_laporan ='$get_id'" ;

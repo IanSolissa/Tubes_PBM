@@ -23,20 +23,34 @@ if (isset($_POST['kondisi'])) {
 } else {
     die(json_encode(["status" => "Gagal", "message" => "kondisi tidak tersedia"]));
 }
+if (isset($_POST['timestamp'])) {
+    $timestamp = $_POST['timestamp'];
+} else {
+    die(json_encode(["status" => "Gagal", "message" => "kondisi tidak tersedia"]));
+}
 
 // Query SQL untuk menyisipkan data ke dalam tabel laporan_anak
-$query = "INSERT INTO `laporan_anak` (`id_anak`, `arrival_time`, `temperature`, `kondisi`) 
-          VALUES ('$id_anak', '$arrival_time', '$temperature', '$kondisi')";
+$query = "INSERT INTO `laporan_anak` (`id_anak`, `arrival_time`, `temperature`, `kondisi`,`timestamp`) 
+          VALUES ('$id_anak', '$arrival_time', '$temperature', '$kondisi','$timestamp')";
 
 // Menjalankan query
 $exe = mysqli_query($con, $query);
+
+
 
 // Memeriksa apakah query berhasil dijalankan atau tidak
 if ($exe) {
     // Mengambil id_anak yang baru saja dimasukkan
     $new_id = mysqli_insert_id($con);
-
+    
+    // echo $new_id;
+    
     $response = ["status" => "Berhasil", "message" => "Data berhasil disimpan", "new_id" => $new_id];
+    $queryUpdateTimeAnak = "UPDATE `anak` SET `updated_at` = NOW() WHERE `id`=$id_anak";
+    $exe2 = mysqli_query($con, $queryUpdateTimeAnak);
+
+
+
 } else {
     $response = ["status" => "Gagal", "message" => "Gagal menyimpan data: " . mysqli_error($con)];
 }
