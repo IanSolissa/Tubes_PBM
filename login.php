@@ -17,31 +17,21 @@ if (isset($_POST['password'])) {
 // Query SQL untuk select data dari tabel user berdasarkan username dan password
 $query = "SELECT * FROM `user` WHERE `username`='$username' AND `password`='$password'";
 $result = mysqli_query($con, $query);
+$exe=mysqli_query($con,$query);
 
 // Memeriksa apakah query berhasil dijalankan atau tidak
-if ($result) {
-    if (mysqli_num_rows($result) > 0) {
-        // Mengambil hasil query
-        $row = mysqli_fetch_assoc($result);
-        // Menyusun respons dalam bentuk array asosiatif
-        $response = [
-            "status" => "Berhasil",
-            "message" => "Data ditemukan",
-            "data" => [
-                "id" => $row['id'],
-                "username" => $row['username'],
-                "password" => $row['password']
-            ]
-        ];
-    } else {
-        $response = ["status" => "Gagal", "message" => "Username atau Password tidak cocok"];
-    }
-} else {
-    $response = ["status" => "Gagal", "message" => "Terjadi kesalahan: " . mysqli_error($con)];
+    $arr=[];
+while ($row = mysqli_fetch_array($exe)) {
+    $arr[]=$row;
+}
+header('Content-Type: application/json');
+echo json_encode($arr,JSON_PRETTY_PRINT);
+     
+if ($exe==false) {
+    echo json_encode($result);
+    # code...
 }
 
-// Mengembalikan respons dalam format JSON
-echo json_encode($response);
 
 // Menutup koneksi ke database
 mysqli_close($con);

@@ -6,16 +6,21 @@ $con = connectdaycareDB(); // Fungsi untuk koneksi ke database
 if (isset($_POST['key'])) {
     $key = $_POST['key'];
 } else {
-    die(json_encode(["status" => "Gagal", "message" => "Key tidak tersedia"]));
+    die(json_encode(["status" => "Gagal", "message" => "Item tidak tersedia"]));
 }
 if (isset($_POST['quantity'])) {
     $quantity = $_POST['quantity'];
 } else {
-    die(json_encode(["status" => "Gagal", "message" => "Quantity tidak tersedia"]));
+    die(json_encode(["status" => "Gagal", "message" => "Item tidak tersedia"]));
+}
+if (isset($_POST['id_laporan'])) {
+    $id_laporan = $_POST['id_laporan'];
+} else {
+    die(json_encode(["status" => "Gagal", "message" => "Item tidak tersedia"]));
 }
 
 // Query SQL untuk menyisipkan data ke dalam tabel item
-$query = "INSERT INTO `item` (`key`, `quantity`) VALUES ('$key', '$quantity')";
+$query = "INSERT INTO `item` (`key`, `quantity`, `id_laporan`) VALUES ('$key', '$quantity', '$id_laporan')";
 $exe = mysqli_query($con, $query);
 
 // Memeriksa apakah query berhasil dijalankan atau tidak

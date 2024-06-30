@@ -6,21 +6,26 @@ $con = connectdaycareDB(); // Fungsi untuk koneksi ke database
 if (isset($_POST['time'])) {
     $time = $_POST['time'];
 } else {
-    die(json_encode(["status" => "Gagal", "message" => "Waktu tidak tersedia"]));
+    die(json_encode(["status" => "Gagal", "message" => "Item tidak tersedia"]));
 }
 if (isset($_POST['ML'])) {
     $ML = $_POST['ML'];
 } else {
-    die(json_encode(["status" => "Gagal", "message" => "Jumlah ML tidak tersedia"]));
+    die(json_encode(["status" => "Gagal", "message" => "Item tidak tersedia"]));
 }
 if (isset($_POST['type'])) {
     $type = $_POST['type'];
 } else {
-    die(json_encode(["status" => "Gagal", "message" => "Tipe tidak tersedia"]));
+    die(json_encode(["status" => "Gagal", "message" => "Item tidak tersedia"]));
+}
+if (isset($_POST['id_laporan'])) {
+    $id_laporan = $_POST['id_laporan'];
+} else {
+    die(json_encode(["status" => "Gagal", "message" => "Item tidak tersedia"]));
 }
 
 // Query SQL untuk menyisipkan data ke dalam tabel bottle
-$query = "INSERT INTO `bottle` (`time`, `ML`, `type`) VALUES ('$time', '$ML', '$type')";
+$query = "INSERT INTO `bottle` (`time`, `ML`, `type`,`id_laporan`) VALUES ('$time', '$ML', '$type', '$id_laporan')";
 $exe = mysqli_query($con, $query);
 
 // Memeriksa apakah query berhasil dijalankan atau tidak

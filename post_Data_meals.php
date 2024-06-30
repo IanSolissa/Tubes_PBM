@@ -6,21 +6,26 @@ $con = connectdaycareDB(); // Fungsi untuk koneksi ke database
 if (isset($_POST['food'])) {
     $food = $_POST['food'];
 } else {
-    die(json_encode(["status" => "Gagal", "message" => "Username tidak tersedia"]));
+    die(json_encode(["status" => "Gagal", "message" => "Item tidak tersedia"]));
 }
 if (isset($_POST['quantity'])) {
     $quantity = $_POST['quantity'];
 } else {
-    die(json_encode(["status" => "Gagal", "message" => "Nama tidak tersedia"]));
+    die(json_encode(["status" => "Gagal", "message" => "Item tidak tersedia"]));
 }
 if (isset($_POST['comment'])) {
     $comment = $_POST['comment'];
 } else {
-    die(json_encode(["status" => "Gagal", "message" => "Nama tidak tersedia"]));
+    die(json_encode(["status" => "Gagal", "message" => "Item tidak tersedia"]));
+}
+if (isset($_POST['id_laporan'])) {
+    $id_laporan = $_POST['id_laporan'];
+} else {
+    die(json_encode(["status" => "Gagal", "message" => "Item tidak tersedia"]));
 }
 
 // Query SQL untuk menyisipkan data ke dalam tabel user
-$query = "INSERT INTO `meals` (`food`, `quantity`,`comment`) VALUES ('$food', '$quantity', '$comment')";
+$query = "INSERT INTO `meals` (`food`, `quantity`,`comment`,`id_laporan`) VALUES ('$food', '$quantity', '$comment','$id_laporan')";
 $exe = mysqli_query($con, $query);
 
 // Memeriksa apakah query berhasil dijalankan atau tidak

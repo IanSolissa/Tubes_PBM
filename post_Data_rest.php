@@ -13,9 +13,14 @@ if (isset($_POST['end_time'])) {
 } else {
     die(json_encode(["status" => "Gagal", "message" => "Nama tidak tersedia"]));
 }
+if (isset($_POST['id_laporan'])) {
+    $id_laporan = $_POST['id_laporan'];
+} else {
+    die(json_encode(["status" => "Gagal", "message" => "Nama tidak tersedia"]));
+}
 
 // Query SQL untuk menyisipkan data ke dalam tabel user
-$query = "INSERT INTO `rest` (`start_time`, `end_time`) VALUES ('$start_time', '$end_time')";
+$query = "INSERT INTO `rest` (`start_time`,`end_time`,`id_laporan`) VALUES ('$start_time', '$end_time', '$id_laporan')";
 $exe = mysqli_query($con, $query);
 
 // Memeriksa apakah query berhasil dijalankan atau tidak

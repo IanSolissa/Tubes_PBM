@@ -18,9 +18,14 @@ if (isset($_POST['time'])) {
 } else {
     die(json_encode(["status" => "Gagal", "message" => "Waktu tidak tersedia"]));
 }
+if (isset($_POST['id_laporan'])) {
+    $id_laporan = $_POST['id_laporan'];
+} else {
+    die(json_encode(["status" => "Gagal", "message" => "Waktu tidak tersedia"]));
+}
 
 // Query SQL untuk menyisipkan data ke dalam tabel vitamin
-$query = "INSERT INTO `vitamin` (`vitamin_name`, `amount`, `time`) VALUES ('$vitamin_name', '$amount', '$time')";
+$query = "INSERT INTO `vitamin` (`vitamin_name`, `amount`, `time`, `id_laporan`) VALUES ('$vitamin_name', '$amount', '$time', '$id_laporan')";
 $exe = mysqli_query($con, $query);
 
 // Memeriksa apakah query berhasil dijalankan atau tidak

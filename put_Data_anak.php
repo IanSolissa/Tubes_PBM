@@ -5,8 +5,8 @@ if (isset($_POST['id_anak'])) {
     $id_anak=$_POST['id_anak'];
     
 }else{
-
-    $id_anak=null;
+    die(json_encode(["status" => "Gagal", "message" => "Item tidak tersedia"]));
+    // $id_anak=null;
     // $id_anak=2;
 
 }
