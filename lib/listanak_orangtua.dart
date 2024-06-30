@@ -22,7 +22,8 @@ class _ListanakOrangtuaState extends State<ListanakOrangtua> {
       final response = await http.post(
         Uri.parse('http://10.0.2.2/daycare_api/get_Data_anak_orangtua.php'),
         body: {
-          "id_orangtua": "2",
+          "id_orangtua": widget.user[0]['id'],
+          // "id_orangtua": widget.user[0]['id'],
         },
       );
 
@@ -70,6 +71,7 @@ class _ListanakOrangtuaState extends State<ListanakOrangtua> {
           elevation: 4.0,
           margin: EdgeInsets.symmetric(vertical: 8.0),
           child: ListTile(
+            subtitle: Text(anak[index]['updated_at']),
             leading: CircleAvatar(
               backgroundColor: Colors.orange,
               child: Icon(Icons.child_care, color: Colors.white),
@@ -81,13 +83,14 @@ class _ListanakOrangtuaState extends State<ListanakOrangtua> {
               ),
             ),
             trailing: IconButton(
-              icon: Icon(Icons.edit, color: Colors.orange),
+              icon: Icon(Icons.remove_red_eye, color: Color.fromARGB(255, 5, 239, 36)),
               onPressed: () async{
           null;      
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => LaporanActivityAnakScreen(id_anak:anak[index]['id']),
+                    // builder: (context) => LaporanActivityAnakScreen(),
                   ),
                 );
               },

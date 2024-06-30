@@ -29,12 +29,13 @@ class VitaminEntry {
 
 class ActivityInputScreen extends StatefulWidget {
   final String childName="ian";
-  final List anak;
+  final dynamic nama_anak;
+  final String id_anak;
   
    bool StatusPut=false;
   final String id_pengasuh;
 
-  ActivityInputScreen({required this.anak,required this.id_pengasuh});
+  ActivityInputScreen({required this.id_anak,required this.nama_anak,required this.id_pengasuh});
 
   @override
   _ActivityInputScreenState createState() => _ActivityInputScreenState();
@@ -73,7 +74,7 @@ String quantityFinal="1";
     'Other': {'checked': false, 'quantity': '1', 'visible': false},
   };
   final TextEditingController _otherItemController = TextEditingController();
-List<dynamic> anak=[];
+// List<dynamic> anak=[];
 
 late String id_laporan="";
 late List<Map<String,dynamic>> itemneed=[];
@@ -331,24 +332,29 @@ print("Api Item Berhasil di gunakan...");
 }
 
 Future<bool> laporanAnak(String $id_anak)async {
+  print(_tanggalController.text);
   if ($id_anak!='') {
-    if (widget.anak[0]['id']!=" ") {
+    if (widget.nama_anak!="") {
 try {
 if (_arrivalController.text==''||_bodyTemperatureController.text==''||_conditionsController.text=='') {
  
   return false;
 }
 else{
+  print(_tanggalController);
    print(_bodyTemperatureController.text);
   print(_conditionsController.text);
   print(_arrivalController.text);
   var response= await http.post(Uri.parse('http://10.0.2.2/daycare_api/post_Data_laporananak.php'),body: {
-    'id_anak':widget.anak[0]['id'],
+    'id_anak':widget.id_anak.toString(),
     'arrival_time':_arrivalController.text,
     'temperature':_bodyTemperatureController.text,
     'kondisi':_conditionsController.text,
+    'timestamp':_tanggalController.text,
     
   });
+
+print(response.body);
     if (response.statusCode==200 || response.statusCode==201 ) {
 
     
@@ -396,7 +402,7 @@ print("Api Laporan Anak Gagal di gunakan...");
 
 
 Future<void> updateDataAnak() async{
- bool initialpost= await laporanAnak(widget.anak[0]['id']); 
+ bool initialpost= await laporanAnak(widget.id_anak.toString()); 
 
 if (initialpost==true && id_laporan!="reset") {
   print("ID LAPORAN : ${id_laporan}");
@@ -406,7 +412,7 @@ if (initialpost==true && id_laporan!="reset") {
     print("---------------------------------------INFO STATUS----------------------------------------------");
     print("laporan anak selesai, dan selanjutnya post tabel lainnya dengan laporan anak menjadi foreign key");
     print("------------------------------------------------------------------------------------------------");
-if (initialpost2==false && widget.anak.length>0) {
+if (initialpost2==false && widget.nama_anak!="") {
 
   
   //------------------------------ POST TO MEALS------------------------------
@@ -544,11 +550,12 @@ else{
 
   @override
   void initState() {
+    print("DATA ID ANAK : ");
+     print(widget.id_anak);
     super.initState();
-    //  PutDataAnak(widget.anak[0]['id']);
     // print(widget.result)
     // print(anak[0]['nama_lengkap']);
-    _namaAnakController.text =widget.anak[0]['nama_lengkap']; // Mengisi nama anak dari parameter
+    _namaAnakController.text =widget.nama_anak; // Mengisi nama anak dari parameter
   }
 
   void _submitActivity(BuildContext context) {
@@ -784,11 +791,11 @@ if (isFind) {
   @override
   Widget build(BuildContext context) {
     
-print(widget.anak);
+// print(widget.anak);
       return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Input Child Activity for ${ widget.anak[0]['nama_lengkap']}',
+          'Input Child Activity for ${ widget.nama_anak}',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -977,7 +984,10 @@ if (isFind) {
               ),
               SizedBox(height: 30),
               ElevatedButton(
-                onPressed: updateDataAnak,
+                onPressed: (){
+                  updateDataAnak();
+                  Navigator.pop(context);
+                },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 15),
                   shape: RoundedRectangleBorder(
@@ -1184,7 +1194,7 @@ if (isFind) {
         readOnly: true,
         onTap: onTap,
         decoration: InputDecoration(
-          labelText: widget.anak[0]['tanggal_lahir'],
+          labelText: "Input Date Time",
           prefixIcon: Icon(icon),
           filled: true,
           fillColor: Colors.white,

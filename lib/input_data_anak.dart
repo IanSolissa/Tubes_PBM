@@ -1,10 +1,15 @@
 import 'dart:convert';
 
+import 'package:daycare_app/login.dart';
+import 'package:daycare_app/menu.dart';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 class InputDataAnakScreen extends StatefulWidget {
+  final List user;
+  InputDataAnakScreen({required this.user});
   @override
+  
   _InputDataAnakScreenState createState() => _InputDataAnakScreenState();
 }
 
@@ -50,7 +55,7 @@ if (_namaController.text=='' ) {
 "hubungan_darurat":_hubunganController.text,
 "nomor_darurat":_nomorTeleponController.text,
 "riwayat_medis":_riwayatMedisController.text,
-"id_orangtua":'4',
+"id_orangtua":widget.user[0]['id'].toString(),
 "id_pengasuh":'2',
     });
    
@@ -159,6 +164,7 @@ setState(() {
   // print(_selectedJenisKelamin);
                   await InputAnak();
                   if (status) {
+                    Navigator.pop(context);
                     print("BERRHASSSIIILLLLLLLL");
                   }
                   else{

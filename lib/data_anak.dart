@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 
+import 'package:daycare_app/input_data_anak.dart';
 import 'package:flutter/material.dart';
 
 import 'activity_input.dart'; // Pastikan file activity_input.dart diimpor
@@ -80,22 +82,23 @@ Future<void> getDataAnak()async{
           Navigator.push(context,MaterialPageRoute(builder: (context)=>ListAnak(anak: anak)));
           }
         }, child: const Text("Lihat Semua Anak",style: TextStyle(color: Colors.white,fontSize:20 ))),
-      ),Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: 
-        TextButton(style: TextButton.styleFrom(backgroundColor: Colors.orange), onPressed: () async{
-           await selectDataPengasuh();
-          print("cekanak");
-          // print(anak);
-          if (anak.length<0) {
-           
-          }
-          else{
-
-          Navigator.push(context,MaterialPageRoute(builder: (context)=>ListAnak(anak: anak)));
-          }
-        }, child: const Text("Lihat Anak Yang Anda Asuh",style: TextStyle(color: Colors.white,fontSize:20 ))),
       ),
+      // Padding(
+      //   padding: const EdgeInsets.all(10.0),
+      //   child: 
+      //   TextButton(style: TextButton.styleFrom(backgroundColor: Colors.orange), onPressed: () async{
+      //      await selectDataPengasuh();
+      //     print("cekanak");
+      //     // print(anak);
+      //     if (anak.length<0) {
+           
+      //     }
+      //     else{
+
+      //     Navigator.push(context,MaterialPageRoute(builder: (context)=>ListAnak(anak: anak)));
+      //     }
+      //   }, child: const Text("",style: TextStyle(color: Colors.white,fontSize:20 ))),
+      // ),
         ],),),
       // Button gausah dipake karna hanya orang tua saja yang bisa daftar anak
       // floatingActionButton: FloatingActionButton(
@@ -108,11 +111,10 @@ Future<void> getDataAnak()async{
 }
 
 class ListAnak extends StatefulWidget {
-  const ListAnak({
-    super.key,
+   ListAnak({
     required this.anak,
   });
-
+  
   final List<dynamic> anak;
 
   @override
@@ -120,11 +122,17 @@ class ListAnak extends StatefulWidget {
 }
 
 class _ListAnakState extends State<ListAnak> {
+  
+  
+
+@override
+
+  
   @override
   Widget build(BuildContext context) {
    if (widget.anak.length>0) {
+
       return Scaffold(
-      
       appBar: 
       AppBar(
         backgroundColor: Colors.orange,
@@ -141,6 +149,7 @@ class _ListAnakState extends State<ListAnak> {
           elevation: 4.0,
           margin: EdgeInsets.symmetric(vertical: 8.0),
           child: ListTile(
+            subtitle: Text(widget.anak[index]['updated_at']),
             leading: CircleAvatar(
               backgroundColor: Colors.orange,
               child: Icon(Icons.child_care, color: Colors.white),
@@ -149,19 +158,20 @@ class _ListAnakState extends State<ListAnak> {
               widget.anak[index]['nama_lengkap'],
               style: TextStyle(
                 fontSize: 18,
+  
               ),
             ),
             trailing: IconButton(
               icon: Icon(Icons.edit, color: Colors.orange),
-              onPressed: () async{
-                
-                Navigator.push(
+              onPressed: () 
+              {
+                // print(widget.anak[index]['id']);
+// print(widget.anak[index]);
+                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ActivityInputScreen(anak: widget.anak,id_pengasuh: widget.anak[index]['id_pengasuh'],),
-                  ),
-                );
-              },
+                    builder: (context) => ActivityInputScreen( id_anak:widget.anak[index]['id'],nama_anak: widget.anak[index]['nama_lengkap'],id_pengasuh: widget.anak[index]['id_pengasuh'])));
+              } 
             ),
           ),
         );

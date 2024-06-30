@@ -19,7 +19,7 @@ class _MenuScreenState extends State<MenuScreen> {
   
   @override
   Widget build(BuildContext context) {
-  if (widget.user[0]['isAdmin']==0) {
+  if (widget.user[0]['isAdmin'] == '0') {
 // ORANG TUA
     return TampilanOrangTua(widget: widget);
   } else{
@@ -82,9 +82,10 @@ late List<dynamic>resultanak;
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
+                  
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => InputDataAnakScreen()),
+                    MaterialPageRoute(builder: (context) => InputDataAnakScreen(user: widget.widget.user)),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -110,6 +111,7 @@ late List<dynamic>resultanak;
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ListanakOrangtua(user: widget.widget.user)),
+                    // MaterialPageRoute(builder: (context) => ListanakOrangtua(user: widget.widget.user)),
                   );
                 },
                 style: ElevatedButton.styleFrom(
